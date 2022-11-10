@@ -15,6 +15,9 @@ ticker_symbol = ticker['Symbol']
 ##make dataframe
 df = pd.DataFrame(data=ticker_symbol)
 
+##remove unlucky numbers
+df = df.drop([13, 666])
+
 ##select the random lucky companies
 df_lucky = df.sample(n = 7)
 print(df_lucky)

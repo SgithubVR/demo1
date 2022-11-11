@@ -122,3 +122,6 @@ spent=df_complete['Actually_spend'].sum()
 new_portfolio_balance=profit+spent
 print(new_portfolio_balance)
 
+
+# new part for looping
+

@@ -29,3 +29,4 @@ API="P6ZDKCUUUUKTQLSW"
 for i in df_lucky['Symbol']:
     url=f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={i}&interval=5min&outputsize=full&apikey={API}"
     print(url)
+

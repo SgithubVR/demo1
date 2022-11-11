@@ -66,3 +66,5 @@ df_tryout=pd.pivot_table(df3, values='profit', index=['index'],
                     columns=['symbol'], aggfunc=np.sum)
 print(df_tryout)
 
+df_new=df3.groupby('symbol')
+print(df_new)

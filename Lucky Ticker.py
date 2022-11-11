@@ -22,11 +22,11 @@ df = df.drop([13, 666])
 df_lucky = df.sample(n = 7)
 print(df_lucky['Symbol'])
 
-API="P6ZDKCUUUUKTQLSW"
+API= "P6ZDKCUUUUKTQLSW"
 
 #print(url)
 
 for i in df_lucky['Symbol']:
-    url=f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={i}&interval=5min&outputsize=full&apikey={API}"
+    url=f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={i}&apikey={API}"
     print(url)
 

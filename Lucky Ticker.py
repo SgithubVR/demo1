@@ -20,4 +20,12 @@ df = df.drop([13, 666])
 
 ##select the random lucky companies
 df_lucky = df.sample(n = 7)
-print(df_lucky)
+print(df_lucky['Symbol'])
+
+API="P6ZDKCUUUUKTQLSW"
+
+#print(url)
+
+for i in df_lucky['Symbol']:
+    url=f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={i}&interval=5min&outputsize=full&apikey={API}"
+    print(url)

@@ -51,7 +51,7 @@ list_column = [
         sg.Listbox(
             values=[], enable_events=True, size=(40, 20), key="Portfolio" # This will enable the user to see which stocks they have bought
         )
-    ],
+    ]
 ]
 
 #Second column with lucky button and eventually coin GIF
@@ -78,9 +78,7 @@ luckyPlus_graph_column = [
 layout = [
     [
         sg.Column(list_column),
-        sg.VSeparator(),
         sg.Column(lucky_column),
-        sg.VSeparator(),
         sg.Column(luckyPlus_graph_column)
     ]
 ]
@@ -94,6 +92,8 @@ while True:
     # End program if user closes window or
     # presses the OK button
     if event == "Lucky":
+        window["Portfolio"].update([df_lucky])
+    elif event == "Lucky +":
         window["Portfolio"].update([df_lucky])
     elif event == "Not lucky" or event == sg.WIN_CLOSED:
         break

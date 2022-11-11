@@ -43,3 +43,11 @@ df.rename(columns=lambda s: s[3:], inplace=True)
 
 print(df.head())
 df[['open', 'high', 'low', 'close']].plot()
+
+df2 = df.reset_index()
+print(df2)
+
+df2 = df2.astype({'index':'string'})
+df2.info()
+df2[['Date', 'Time']] = df2['index'].str.split(' ', 1, expand=True)
+print(df2)

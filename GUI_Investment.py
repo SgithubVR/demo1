@@ -44,26 +44,31 @@ df_lucky = ["IBM", "APPL", "Stock1", "Stock2"]
 #First column with not lucky button and portfolio list
 header = sg.Text("How lucky are you feeling?")
 #Third column with lucky+ button and time series graph
-header_row = [
+input_row = [
     [
         sg.Text("How much do you want to invest?"),
         sg.Input(key="-IN-"),
         sg.Button("Deposit")
+        # Add functionality to change currencies
     ]
 ]
 
-list_column = [
+button_row = [
     [
-        sg.Button("Not lucky")
-
+        sg.Text("How lucky are you feeling today?")
+    ],
+    [
+        sg.Button("Not lucky"),
+        sg.Button("Lucky"),
+        sg.Button("Lucky +"),
     ]
 ]
+
 
 #Second column with lucky button and eventually coin GIF
 lucky_column = [
     [
-        sg.Button("Lucky")
-
+        sg.Text("Your Portfolio")
     ],
     [
         sg.Listbox(
@@ -79,10 +84,6 @@ lucky_column = [
 
 luckyPlus_graph_column = [
     [
-        sg.Button("Lucky +")
-
-    ],
-    [
         sg.Canvas(size=(50,50), key="-CANVAS-")
     ]
 
@@ -91,11 +92,13 @@ luckyPlus_graph_column = [
 #Full Layout
 layout = [
     [
-        header_row
+       input_row
     ],
     [
-        sg.Column(list_column),
-        sg.Column(lucky_column),
+        button_row
+    ],
+    [
+        sg.Column(lucky_column, scrollable=False, element_justification="center"),
         sg.Column(luckyPlus_graph_column),
     ]
 ]
@@ -113,8 +116,8 @@ canvas = canvas_elem.TKCanvas
 
 figure = Figure()
 ax = figure.add_subplot(111)
-ax.set_xlabel("X axis")
-ax.set_ylabel("Y axis")
+ax.set_xlabel("Months")
+ax.set_ylabel("EUR") # Make dynamic, respond to different currencies
 ax.grid()
 fig_agg = draw_figure(canvas, figure)
 
@@ -126,25 +129,32 @@ while True:
 
     if event == "Deposit":
         # window['-WALLET-'].Update(values['-IN-'])
-        sg.popup(f"Your balance is {values['-IN-']}")
+        sg.popup(f"Your balance is €{values['-IN-']}")
 
     if event == "Lucky":
         window["Portfolio"].update(df_lucky)
         ax.cla()
         ax.grid()
+        ax.set_xlabel("Months")
+        ax.set_ylabel("EUR") # Make dynamic, respond to different currencies
         performance = [randint(500, 1000) for x in range(6)]
         ax.plot(month, performance)
         fig_agg.draw()
         window.refresh()
+        # sg.Popup() # Wallet balance after investing
 
     elif event == "Lucky +":
         window["Portfolio"].update(df_lucky)
         ax.cla()
         ax.grid()
+        ax.set_xlabel("Months")
+        ax.set_ylabel("EUR") # Make dynamic, respond to different currencies
         performance = [randint(500, 1000) for x in range(6)]
         ax.plot(month, performance)
         fig_agg.draw()
         window.refresh()
+        # sg.Popup()  # Wallet balance after investing
+
     elif event == "Not lucky" or event == sg.WIN_CLOSED:
         break
 

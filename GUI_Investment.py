@@ -21,6 +21,24 @@ def draw_figure(canvas, figure):
 df_lucky = ["IBM", "APPL", "Stock1", "Stock2"]
 
 
+from io import BytesIO
+from PIL import Image
+import PySimpleGUI as sg
+
+def array_to_data(array):
+    im = Image.fromarray(array)
+    with BytesIO() as output:
+        im.save(output, format="PNG")
+        data = output.getvalue()
+    return data
+
+font = ("Courier New", 11)
+sg.theme("DarkBlue3")
+sg.set_options(font=font)
+
+im = Image.open("C:/Users/arucabado-gordo/OneDrive - Deloitte (O365D)/Documents")
+array = np.array(im, dtype=np.uint8)
+data = array_to_data(array)
 
 
 
@@ -79,22 +97,30 @@ layout = [
     [
         sg.Column(list_column),
         sg.Column(lucky_column),
-        sg.Column(luckyPlus_graph_column)
+        sg.Column(luckyPlus_graph_column),
+        sg.Graph(canvas_size=(640,480),
+                 graph_bottom_left=(0,0),
+                 graph_top_right=(640,480),
+                 key="-GRAPH-",
+                 change_submits=True,
+                 background_color='lightblue',
+                 drag_submits=True),
     ]
 ]
 
 window = sg.Window("Stock Investment Game (Name TBD)", layout)
-draw_figure(window["-Canvas-"].TKCanvas, fig)
+graph = window["-GRAPH-"]
+graph.draw_figure(data=t, location=(0, 480))
 
 # Create an event loop
 while True:
-    event, values = window.read()
+    event, values, graph = window.read()
     # End program if user closes window or
     # presses the OK button
     if event == "Lucky":
-        window["Portfolio"].update([df_lucky])
+        window["Portfolio"].update(df_lucky)
     elif event == "Lucky +":
-        window["Portfolio"].update([df_lucky])
+        window["Portfolio"].update(df_lucky)
     elif event == "Not lucky" or event == sg.WIN_CLOSED:
         break
 

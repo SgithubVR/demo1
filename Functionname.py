@@ -120,4 +120,3 @@ for i in range(index_start, index_end):
 
 print(new_portfolio_balance)
 print(list_new_portfolio_balance)
-#print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

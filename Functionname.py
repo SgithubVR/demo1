@@ -131,7 +131,6 @@ df_complete['Actually_spend'] = df_complete['Buy'] * df_complete['Amount_bought'
 profit = df_complete['Profit'].sum()
 spent = df_complete['Actually_spend'].sum()
 new_portfolio_balance= profit + new_portfolio_balance
-#new_portfolio_balance=new_portfolio_balance+new_portfolio
 print(new_portfolio_balance)
 print(df_complete)
 #print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

@@ -78,7 +78,7 @@ df3['profit']=df3['close']-df3['open']
 print(df3)
 
 df_all=pd.pivot_table(df3, values=['profit','open','close'], index=['index'],
-                    columns=['symbol'], aggfunc=np.sum)
+                    columns=['symbol'], aggfunc=np.sum).reset_index()
 #df_profit=pd.pivot_table(df3, values='profit', index=['index'],
                     #columns=['symbol'], aggfunc=np.sum)
 #df_cost=pd.pivot_table(df3, values='open', index=['index'],
@@ -92,36 +92,42 @@ df_all=pd.pivot_table(df3, values=['profit','open','close'], index=['index'],
 #     profit=
 #
 
-
 today='2022-07-07'
-df_buy=df_all['open'].loc[today]
+df_all.rename(columns = {'index':'Date'}, inplace = True)
+print(df_all)
+indexvalue=int(df_all.index[df_all['Date']==f'{today}'].tolist())
+print(indexvalue)
+print(index)
+df_buy=df_all['open'].iloc[index]
 df_buy=df_buy.reset_index()
 df_buy.rename(columns = {f'{today}':'Buy'}, inplace = True)
-df_sell = df_all['close'].loc[today]
+df_sell = df_all['close'].iloc[index]
 df_sell = df_sell.reset_index()
 df_sell.rename(columns = {f'{today}':'Sell'}, inplace = True)
-
-
+print(df_buy)
+print(df_sell)
 # create dataframe to see how many stocks we can buy on the allocated date
-df_complete=pd.DataFrame()
 # available in wallet (NEEDS TO BE UPDATED!)
 wallet=30000
 
 # in case of evenly distributed ( "you feel lucky")
-a = wallet/len(df_lucky) # available money per stock if wallet is evenly distributed over available stocks
-df_complete['symbol']=df3['symbol'].unique()
-df_complete['Available_Money']=a
-df_complete=df_complete.merge(df_buy,how="inner",on='symbol')
-df_complete=df_complete.merge(df_sell,how="inner",on='symbol')
-df_complete['Amount_bought']=df_complete['Available_Money']/df_complete['Buy']
-df_complete['Amount_bought']=df_complete['Amount_bought'].astype(int)
-df_complete['Profit']=(df_complete['Sell']-df_complete['Buy'])*df_complete['Amount_bought']
-df_complete['Actually_spend']=df_complete['Buy']*df_complete['Amount_bought']
-profit=df_complete['Profit'].sum()
-spent=df_complete['Actually_spend'].sum()
-new_portfolio_balance=profit+spent
-print(new_portfolio_balance)
-
 
 # new part for looping
+new_portfolio_balance=30000
+df_complete=pd.DataFrame()
 
+am = new_portfolio_balance / len(df_lucky)  # available money per stock if wallet is evenly distributed over available stocks
+df_complete['symbol'] = df3['symbol'].unique()
+df_complete['Available_Money'] = am
+df_complete = df_complete.merge(df_buy, how="inner", on='symbol')
+df_complete = df_complete.merge(df_sell, how="inner", on='symbol')
+df_complete['Amount_bought'] = df_complete['Available_Money'] / df_complete['Buy']
+df_complete['Amount_bought'] = df_complete['Amount_bought'].astype(int)
+df_complete['Profit'] = (df_complete['Sell'] - df_complete['Buy']) * df_complete['Amount_bought']
+df_complete['Actually_spend'] = df_complete['Buy'] * df_complete['Amount_bought']
+profit = df_complete['Profit'].sum()
+spent = df_complete['Actually_spend'].sum()
+new_portfolio= profit + spent
+new_portfolio_balance=new_portfolio_balance+new_portfolio
+print(df_complete)
+#print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

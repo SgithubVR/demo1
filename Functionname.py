@@ -99,6 +99,7 @@ indexvalue=df_all.index[df_all['Date']==f'{today}'].tolist()
 index_start=indexvalue[0]
 df_all=df_all.sort_values(by='Date', ascending=True)
 index_end=len(df_all)
+print(index_end)
 index=index_start
 df_buy=df_all['open'].iloc[index]
 df_buy=df_buy.reset_index()
@@ -106,6 +107,7 @@ df_buy.rename(columns = {index:'Buy'}, inplace = True)
 df_sell = df_all['close'].iloc[index]
 df_sell = df_sell.reset_index()
 df_sell.rename(columns = {index:'Sell'}, inplace = True)
+print(df_all)
 print(df_buy)
 print(df_sell)
 # create dataframe to see how many stocks we can buy on the allocated date
@@ -128,7 +130,8 @@ df_complete['Profit'] = (df_complete['Sell'] - df_complete['Buy']) * df_complete
 df_complete['Actually_spend'] = df_complete['Buy'] * df_complete['Amount_bought']
 profit = df_complete['Profit'].sum()
 spent = df_complete['Actually_spend'].sum()
-new_portfolio= profit + spent
-new_portfolio_balance=new_portfolio_balance+new_portfolio
+new_portfolio_balance= profit + new_portfolio_balance
+#new_portfolio_balance=new_portfolio_balance+new_portfolio
+print(new_portfolio_balance)
 print(df_complete)
 #print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

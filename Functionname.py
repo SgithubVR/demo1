@@ -91,29 +91,30 @@ df_all=pd.pivot_table(df3, values=['profit','open','close'], index=['index'],
 # def timeline(index):
 #     profit=
 #
-
+new_portfolio_balance=30000
+wallet=30000
 today='2022-07-07'
 df_all.rename(columns = {'index':'Date'}, inplace = True)
-print(df_all)
-indexvalue=int(df_all.index[df_all['Date']==f'{today}'].tolist())
-print(indexvalue)
-print(index)
+indexvalue=df_all.index[df_all['Date']==f'{today}'].tolist()
+index_start=indexvalue[0]
+df_all=df_all.sort_values(by='Date', ascending=True)
+index_end=len(df_all)
+index=index_start
 df_buy=df_all['open'].iloc[index]
 df_buy=df_buy.reset_index()
-df_buy.rename(columns = {f'{today}':'Buy'}, inplace = True)
+df_buy.rename(columns = {index:'Buy'}, inplace = True)
 df_sell = df_all['close'].iloc[index]
 df_sell = df_sell.reset_index()
-df_sell.rename(columns = {f'{today}':'Sell'}, inplace = True)
+df_sell.rename(columns = {index:'Sell'}, inplace = True)
 print(df_buy)
 print(df_sell)
 # create dataframe to see how many stocks we can buy on the allocated date
 # available in wallet (NEEDS TO BE UPDATED!)
-wallet=30000
 
 # in case of evenly distributed ( "you feel lucky")
 
 # new part for looping
-new_portfolio_balance=30000
+
 df_complete=pd.DataFrame()
 
 am = new_portfolio_balance / len(df_lucky)  # available money per stock if wallet is evenly distributed over available stocks

@@ -41,7 +41,7 @@ while number > 5:
 #df_lucky = df.sample(n = 5)
 #df_lucky = df_lucky[df_lucky['Symbol'].str.contains('\^')==False]
 
-API="P6ZDKCUUUUKTQLSW"
+API="MIOW8HZ1VSXRSCDL"
 
 #print(url)
 df3=pd.DataFrame()
@@ -86,6 +86,8 @@ indexvalue=df_all.index[df_all['Date']==f'{today}'].tolist()
 index_start=indexvalue[0]
 df_all=df_all.sort_values(by='Date', ascending=True)
 index_end=100 # df_all length - 100 timestamps
+list_new_portfolio_balance=[]
+print(list_new_portfolio_balance)
 for i in range(index_start, index_end):
     index=i
     ## retrieves the information on what stocks you bought at what price on that particular day
@@ -114,6 +116,8 @@ for i in range(index_start, index_end):
     profit = df_complete['Profit'].sum()
     spent = df_complete['Actually_spend'].sum()
     new_portfolio_balance= profit + new_portfolio_balance
+    list_new_portfolio_balance.append(new_portfolio_balance)
 
 print(new_portfolio_balance)
+print(list_new_portfolio_balance)
 #print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

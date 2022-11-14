@@ -75,62 +75,45 @@ for i in df_lucky['Symbol']:
     df3 = pd.concat([df3,df2], axis=0)
 
 df3['profit']=df3['close']-df3['open']
-print(df3)
 
 df_all=pd.pivot_table(df3, values=['profit','open','close'], index=['index'],
                     columns=['symbol'], aggfunc=np.sum).reset_index()
-#df_profit=pd.pivot_table(df3, values='profit', index=['index'],
-                    #columns=['symbol'], aggfunc=np.sum)
-#df_cost=pd.pivot_table(df3, values='open', index=['index'],
-                    #columns=['symbol'], aggfunc=np.sum)
-#df_revenue=pd.pivot_table(df3, values='close', index=['index'],
-                    #columns=['symbol'], aggfunc=np.sum)
 
-
-# ## pick day 7-7
-# def timeline(index):
-#     profit=
-#
 new_portfolio_balance=30000
-wallet=30000
 today='2022-07-07'
 df_all.rename(columns = {'index':'Date'}, inplace = True)
 indexvalue=df_all.index[df_all['Date']==f'{today}'].tolist()
 index_start=indexvalue[0]
 df_all=df_all.sort_values(by='Date', ascending=True)
-index_end=len(df_all)
-print(index_end)
-index=index_start
-df_buy=df_all['open'].iloc[index]
-df_buy=df_buy.reset_index()
-df_buy.rename(columns = {index:'Buy'}, inplace = True)
-df_sell = df_all['close'].iloc[index]
-df_sell = df_sell.reset_index()
-df_sell.rename(columns = {index:'Sell'}, inplace = True)
-print(df_all)
-print(df_buy)
-print(df_sell)
-# create dataframe to see how many stocks we can buy on the allocated date
-# available in wallet (NEEDS TO BE UPDATED!)
+index_end=100 # df_all length - 100 timestamps
+for i in range(index_start, index_end):
+    index=i
+    ## retrieves the information on what stocks you bought at what price on that particular day
+    df_buy=df_all['open'].iloc[index]
+    df_buy=df_buy.reset_index()
+    df_buy.rename(columns = {index:'Buy'}, inplace = True)
+    ## retrieves the information on what stocks you sold at what price on that particular day
+    df_sell = df_all['close'].iloc[index]
+    df_sell = df_sell.reset_index()
+    df_sell.rename(columns = {index:'Sell'}, inplace = True)
+    ## adds a timestamp to the information list
+    df_sell['Date']=df_all['Date'].iloc[index]
+    # creates dataframe to combine information on prices, timestamp and available money part for looping
+    df_complete=pd.DataFrame()
+    am = new_portfolio_balance / len(df_lucky)  # available money per stock if wallet is evenly distributed over available stocks
+    df_complete['symbol'] = df3['symbol'].unique()
+    df_complete['Available_Money'] = am
+    df_complete = df_complete.merge(df_buy, how="inner", on='symbol')
+    df_complete = df_complete.merge(df_sell, how="inner", on='symbol')
+    df_complete['Amount_bought'] = df_complete['Available_Money'] / df_complete['Buy']
+    df_complete['Amount_bought'] = df_complete['Amount_bought'].astype(int)
+    df_complete['Profit'] = (df_complete['Sell'] - df_complete['Buy']) * df_complete['Amount_bought']
+    df_complete['Actually_spend'] = df_complete['Buy'] * df_complete['Amount_bought']
+    df_complete['Date']=df_sell['Date']
+    #df_complete['Date'] =df_all['Date'].iloc[index]
+    profit = df_complete['Profit'].sum()
+    spent = df_complete['Actually_spend'].sum()
+    new_portfolio_balance= profit + new_portfolio_balance
 
-# in case of evenly distributed ( "you feel lucky")
-
-# new part for looping
-
-df_complete=pd.DataFrame()
-
-am = new_portfolio_balance / len(df_lucky)  # available money per stock if wallet is evenly distributed over available stocks
-df_complete['symbol'] = df3['symbol'].unique()
-df_complete['Available_Money'] = am
-df_complete = df_complete.merge(df_buy, how="inner", on='symbol')
-df_complete = df_complete.merge(df_sell, how="inner", on='symbol')
-df_complete['Amount_bought'] = df_complete['Available_Money'] / df_complete['Buy']
-df_complete['Amount_bought'] = df_complete['Amount_bought'].astype(int)
-df_complete['Profit'] = (df_complete['Sell'] - df_complete['Buy']) * df_complete['Amount_bought']
-df_complete['Actually_spend'] = df_complete['Buy'] * df_complete['Amount_bought']
-profit = df_complete['Profit'].sum()
-spent = df_complete['Actually_spend'].sum()
-new_portfolio_balance= profit + new_portfolio_balance
 print(new_portfolio_balance)
-print(df_complete)
 #print(df_complete[df_complete['Date'].isin([f'{today}'])].index)

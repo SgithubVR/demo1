@@ -25,25 +25,7 @@ df_lucky = ["IBM", "APPL", "Stock1", "Stock2"]
 
 
 
-#sg.Window(title = "Hello World", layout=[[]], margins = (100, 50)).read()
-
-#layout = [[sg.Text("Do you want to get lucky?")], [sg.Button("I want to get lucky!")]]
-
-#window = sg.Window("Stock Investment", layout)
-
-# Create an event loop
-#while True:
-    #event, values = window.read()
-    # End program if user closes window or
-    # presses the OK button
-    #if event == "I want to get lucky!" or event == sg.WIN_CLOSED:
-        #break
-
-#window.close()
-
-#First column with not lucky button and portfolio list
-header = sg.Text("How lucky are you feeling?")
-#Third column with lucky+ button and time series graph
+# Section to deposit money
 input_row = [
     [
         sg.Text("How much do you want to invest?"),
@@ -53,6 +35,7 @@ input_row = [
     ]
 ]
 
+# Section for buttons
 button_row = [
     [
         sg.Text("How lucky are you feeling today?")
@@ -65,7 +48,7 @@ button_row = [
 ]
 
 
-#Second column with lucky button and eventually coin GIF
+# First column with
 lucky_column = [
     [
         sg.Text("Your Portfolio")
@@ -95,11 +78,14 @@ layout = [
        input_row
     ],
     [
-        button_row
+       button_row
     ],
     [
-        sg.Column(lucky_column, scrollable=False, element_justification="center"),
-        sg.Column(luckyPlus_graph_column),
+       sg.Column(lucky_column, scrollable=False, element_justification="center"),
+       sg.Column(luckyPlus_graph_column),
+    ],
+    [
+       sg.Button("Exit")
     ]
 ]
 
@@ -109,8 +95,7 @@ def draw_figure(canvas, figure):
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
 
-window = sg.Window("Stock Investment Game (Name TBD)", layout, finalize=True, element_justification='center').Finalize()
-# window.Element("-WALLET-")._TKOut.output.bind("<Key>", lambda e: "break") # Making output box read-only
+window = sg.Window("Stock Investment Game (Name TBD)", layout ,finalize=True, element_justification='center').Finalize()
 canvas_elem = window["-CANVAS-"]
 canvas = canvas_elem.TKCanvas
 
@@ -122,7 +107,7 @@ ax.grid()
 fig_agg = draw_figure(canvas, figure)
 
 
-# Create an event loop
+# Create an event loop to initialize the GUI
 while True:
     event, values = window.read()
     window['-WALLET-'].Update(values['-IN-'])
@@ -155,7 +140,7 @@ while True:
         window.refresh()
         # sg.Popup()  # Wallet balance after investing
 
-    elif event == "Not lucky" or event == sg.WIN_CLOSED:
+    elif event == "Not lucky" or event == "Exit" or event == sg.WIN_CLOSED:
         break
 
 
